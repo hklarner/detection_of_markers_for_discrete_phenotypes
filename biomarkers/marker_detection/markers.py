@@ -37,4 +37,4 @@ class Markers(BaseModel, ToJsonMixin):
         with open(fname, "w") as fp:
             fp.write('\n'.join(', '.join(line) for line in lines))
 
-        log.info(f"created csv file: {fname=}")
+        log.info(f"created csv file: fname={fname}")

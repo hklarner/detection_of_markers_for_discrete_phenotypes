@@ -1,9 +1,9 @@
 
 
-import sys
 import logging
-from typing import List
+import sys
 from collections import defaultdict
+from typing import List
 
 from biomarkers.marker_detection.problem import Problem
 
@@ -20,7 +20,7 @@ def validate_marker_set_and_print_result(problem: Problem, markers: List[str]):
         markertype_to_phenotype[marker_type].add(pheno_type)
 
         if len(markertype_to_phenotype[marker_type]) > 1:
-            log.error(f"markers are not consistent with phenotypes: {dict(markertype_to_phenotype)=}, state_index={i}")
+            log.error(f"markers are not consistent with phenotypes: {dict(markertype_to_phenotype)}, state_index={i}")
             sys.exit(1)
 
     log.info(f"markers are consistent with phenotypes.")

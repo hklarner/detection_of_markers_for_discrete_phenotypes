@@ -3,10 +3,7 @@
 import click
 
 from biomarkers.tools.marker_detection import try_to_load_problem_or_exit
-from biomarkers.factories.model import model_from_problem
-from biomarkers.tools.info import print_asp_program
-from biomarkers.tools.info import print_phenotype_table
-from biomarkers.tools.marker_detection import try_to_load_problem_or_exit
+from biomarkers.tools.steady_states import print_phenotype_table
 
 
 @click.command("phenotypes")
@@ -23,7 +20,7 @@ def phenotypes(fname_problem: str, table: bool, correlation: bool):
     problem = try_to_load_problem_or_exit(fname=fname_problem)
 
     if phenotypes:
-        print_phenotype_table(steady_states=problem.steady_states, phenotype_indices=problem.get_phenotype_indices())
+        print_phenotype_table(steady_states=problem.steady_states, phenotype_indices=problem.phenotype_indices)
 
 
 

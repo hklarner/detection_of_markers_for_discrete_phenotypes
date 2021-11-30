@@ -1,7 +1,7 @@
 
 
-import sys
 import logging
+import sys
 from typing import List, Optional
 
 log = logging.getLogger(__name__)
@@ -17,7 +17,7 @@ def try_to_parse_comma_separated_values_or_exit(text: str) -> Optional[List[str]
     try:
         return text.split(",")
     except ValueError as error:
-        log.error(f"cannot parse components: {text=}, {error=}")
+        log.error(f"cannot parse components: text={text}, error={error}")
         sys.exit()
 
 
@@ -25,7 +25,7 @@ def try_to_parse_comma_separated_items_or_exit(text: str) -> Optional[dict]:
     try:
         return parse_comma_separated_items(text=text, value_map=int)
     except ValueError as error:
-        log.error(f"cannot parse subspace: {text=}, {error=}")
+        log.error(f"cannot parse subspace: text={text}, error={error}")
         sys.exit()
 
 

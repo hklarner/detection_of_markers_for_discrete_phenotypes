@@ -20,7 +20,7 @@ class Problem(BaseModel, ToJsonMixin):
     max_marker_size: Optional[int]
     phenotype_components: Optional[List[int]]
     phenotype_indices: Optional[List[int]]
-    phenotype_subspace: Optional[Dict[str, int]]
+    phenotype_subspace: Optional[Dict[int, int]]
     forbidden_marker_components: Optional[List[int]]
 
     def print_summary(self):
@@ -31,24 +31,12 @@ class Problem(BaseModel, ToJsonMixin):
         print(f"component_names: {self.component_names}")
         print(f"phenotype_components: {self.phenotype_components}")
         print(f"phenotype_subspace: {self.phenotype_subspace}")
+
         if self.forbidden_marker_components:
             print(f"forbidden_marker_components: {self.forbidden_marker_components} = {[self.component_names[x] for x in self.forbidden_marker_components]}")
 
-    def get_phenotype_indices(self) -> List[int]:
-        if self.phenotype_indices:
-            return list(self.phenotype_indices)
-
-        phenotypes = []
-        phenotype_indices = []
-        for state in self.steady_states:
-            phenotype = tuple(state[x] for x in self.phenotype_components)
-            if phenotype not in phenotypes:
-                phenotypes.append(phenotype)
-            phenotype_indices.append(phenotypes.index(phenotype))
-
-        self.phenotype_indices = phenotype_indices
-
-        return list(phenotype_indices)
+    def has_phenotype_index(self, index: int) -> bool:
+        return index in self.phenotype_indices
 
     @validator("steady_states")
     def is_binary_vector(cls, v):

@@ -7,12 +7,13 @@ import click
 import pandas as pd
 
 from biomarkers import read_version_txt
-from biomarkers.cli.markers import markers_factorize, markers_validate, markers_export
+from biomarkers.cli.control import control_create
+from biomarkers.cli.markers import markers_factorize, markers_validate, markers_export, markers_info
 from biomarkers.cli.phenotypes import phenotypes
 from biomarkers.cli.problem import problem_create, problem_debug
 from biomarkers.cli.problem import problem_solve, problem_solve_heuristic
 from biomarkers.cli.repo import repo
-from biomarkers.cli.steady_states import steady_states
+from biomarkers.cli.steady_states import steady_states_matrix
 
 log = logging.getLogger()
 logging.basicConfig(format="%(message)s", stream=sys.stdout, level=logging.INFO)
@@ -36,7 +37,9 @@ main.add_command(problem_create)
 main.add_command(repo)
 main.add_command(markers_validate)
 main.add_command(markers_export)
+main.add_command(markers_info)
 main.add_command(problem_debug)
 main.add_command(markers_factorize)
-main.add_command(steady_states)
+main.add_command(steady_states_matrix)
 main.add_command(phenotypes)
+main.add_command(control_create)

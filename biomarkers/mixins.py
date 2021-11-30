@@ -11,4 +11,4 @@ class ToJsonMixin:
         with open(fname, "w") as fp:
             json.dump(obj=self.dict(), fp=fp, sort_keys=True)
 
-        log.info(f"created json file: {fname=}")
+        log.info(f"created json file: fname={fname}")

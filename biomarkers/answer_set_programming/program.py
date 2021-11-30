@@ -1,23 +1,19 @@
 
 
 import logging
+import subprocess
 from typing import List
 
-import subprocess
+from clingo import Model
 from clingo.control import Control
-from clingo.solving import SolveResult
-from clingo import Model as ClingoModel
-
-from biomarkers.marker_detection.markers import Markers
 
 log = logging.getLogger(__name__)
 
 
-class Model:
+class Program:
     control: Control
     program: List[str]
     options: List[str]
-    result: SolveResult = None
 
     def __init__(self, options: List[str] = None):
         if options is None:
@@ -29,19 +25,19 @@ class Model:
     def __repr__(self) -> str:
         return "\n".join(self.program)
 
-    def add_lines_to_program(self, lines: List[str]):
+    def add_lines(self, lines: List[str]):
         self.program.extend(lines)
 
-    def add_line_to_program(self, line: str):
-        self.add_lines_to_program([line])
+    def add_line(self, line: str):
+        self.add_lines([line])
 
     def show(self, predicate: str, arity: int):
-        self.add_lines_to_program(lines=["% solver instructions", f"#show {predicate}/{arity}."])
+        self.add_lines(lines=["% solver instructions", f"#show {predicate}/{arity}."])
 
-    def solve(self) -> Markers:
+    def solve(self) -> List[List[int]]:
         indices = []
 
-        def on_model(model: ClingoModel):
+        def on_model(model: Model):
             if model.optimality_proven:
                 indices.append(sorted(symbol.number for symbol in model.symbols(shown=True)))
             else:
@@ -49,17 +45,12 @@ class Model:
 
         self.control.add(name="base", parameters={}, program="\n".join(self.program))
         self.control.ground(parts=[("base", [])])
-        self.result = self.control.solve(on_model=on_model)
+        self.control.solve(on_model=on_model)
 
-        indices.sort()
-
-        return Markers(indices=indices)
+        return indices
 
     def print_solve_result(self):
         print(f"control.is_conflicting={self.control.is_conflicting}")
-        if self.result:
-            print(f"result.satisfiable={self.result.satisfiable}")
-            print(f"result.exhausted={self.result.exhausted}")
 
     def solve_command_line(self, options: List[str] = None):
         if options is None:

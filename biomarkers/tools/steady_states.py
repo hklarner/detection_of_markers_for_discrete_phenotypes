@@ -1,15 +1,14 @@
 
 
-from typing import List, Optional
 from collections import defaultdict
+from typing import List, Optional
 
 import click
 
 from biomarkers.marker_detection.problem import Problem
-from biomarkers.answer_set_programming.model import Model
 
 
-def echo_steady_state_table(problem: Problem):
+def echo_steady_state_matrix(problem: Problem):
     states = problem.steady_states
     n = len(states[0])
     m = len(states)
@@ -28,18 +27,6 @@ def echo_steady_state_table(problem: Problem):
     for _ in range(int(n/10)):
         click.echo("         ^", nl=False)
     click.echo()
-
-
-def print_phenotype_marker_comparison(steady_states: List[List[int]], phenotype_indices: List[int]):
-    pass
-
-
-def print_asp_program(model: Model):
-    for line in model.program:
-        if len(line) < 200:
-            print(line.replace("%", "\n%"))
-        else:
-            print(f"{line[:50]} ... (len(line)={len(line)})")
 
 
 def print_phenotype_table(steady_states: List[List[int]], phenotype_indices: List[int], phenotype_components: Optional[List[str]] = None):

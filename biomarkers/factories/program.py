@@ -1,24 +1,20 @@
-
-
-from typing import List, Optional
-
+from biomarkers.answer_set_programming.program import Program
 from biomarkers.marker_detection.problem import Problem
-from biomarkers.answer_set_programming.model import Model
 
 
-def model_from_problem(problem: Problem) -> Model:
-    model = Model()
+def program_from_problem(problem: Problem) -> Program:
+    program = Program()
 
-    add_steady_state_data(model=model, problem=problem)
-    add_marker_definition(model=model, problem=problem)
-    add_phenotype_definition(model=model, problem=problem)
-    add_consistency(model=model, problem=problem)
-    model.show(predicate="m", arity=1)
+    add_steady_state_data(model=program, problem=problem)
+    add_marker_definition(model=program, problem=problem)
+    add_phenotype_definition(model=program, problem=problem)
+    add_consistency(model=program, problem=problem)
+    program.show(predicate="m", arity=1)
 
-    return model
+    return program
 
 
-def add_consistency(problem: Problem, model: Model):
+def add_consistency(problem: Problem, model: Program):
     if problem.enable_one_to_one_consistency:
         lines = ["% defines 1-to-1 consistency between markers and phenotypes",
                  ":- different_marker_type(S1,S2), not different_phenotype(S1,S2)."]
@@ -27,15 +23,15 @@ def add_consistency(problem: Problem, model: Model):
 
     lines.append(":- different_phenotype(S1,S2), not different_marker_type(S1,S2).")
 
-    model.add_lines_to_program(lines=lines)
+    model.add_lines(lines=lines)
 
 
-def add_steady_state_data(model: Model, problem: Problem):
-    model.add_line_to_program("% defines the steady states")
-    model.add_line_to_program("\n".join([" ".join(f"x({i},{c},{a})." for c, a in enumerate(state)) for i, state in enumerate(problem.steady_states)]))
+def add_steady_state_data(model: Program, problem: Problem):
+    model.add_line("% defines the steady states")
+    model.add_line("\n".join([" ".join(f"x({i},{c},{a})." for c, a in enumerate(state)) for i, state in enumerate(problem.steady_states)]))
 
 
-def add_marker_definition(model: Model, problem: Problem):
+def add_marker_definition(model: Program, problem: Problem):
     pre = f"{problem.min_marker_size} " if problem.min_marker_size is not None else ""
     post = f" {problem.max_marker_size}" if problem.max_marker_size is not None else ""
 
@@ -55,10 +51,10 @@ def add_marker_definition(model: Model, problem: Problem):
         "different_marker_type(S1,S2) :- different_marker_type(S2,S1)."
     ])
 
-    model.add_lines_to_program(lines=lines)
+    model.add_lines(lines=lines)
 
 
-def add_phenotype_definition(model: Model, problem: Problem):
+def add_phenotype_definition(model: Program, problem: Problem):
     lines = []
     if problem.phenotype_components:
         lines.extend([
@@ -76,6 +72,6 @@ def add_phenotype_definition(model: Model, problem: Problem):
             "different_phenotype(S1,S2) :- p(S1,P1), p(S2,P2), P1!=P2."])
 
     lines.append("different_phenotype(S1,S2) :- different_phenotype(S2,S1).")
-    model.add_lines_to_program(lines=lines)
+    model.add_lines(lines=lines)
 
 
