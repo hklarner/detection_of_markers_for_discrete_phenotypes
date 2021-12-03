@@ -35,9 +35,6 @@ class Problem(BaseModel, ToJsonMixin):
         if self.forbidden_marker_components:
             print(f"forbidden_marker_components: {self.forbidden_marker_components} = {[self.component_names[x] for x in self.forbidden_marker_components]}")
 
-    def has_phenotype_index(self, index: int) -> bool:
-        return index in self.phenotype_indices
-
     @validator("steady_states")
     def is_binary_vector(cls, v):
         if not set(x for state in v for x in state).issubset({0, 1}):

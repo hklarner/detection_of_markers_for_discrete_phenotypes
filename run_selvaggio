@@ -2,6 +2,7 @@
 
 biomarkers problem-create -p selvaggio_m1_problem.json --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0,FA_b1=1,FA_b2=0,FA_b3=0 --max-markers 3
 biomarkers problem-solve -p selvaggio_m1_problem.json -m selvaggio_m1_markers.json
+
 biomarkers control-create -p selvaggio_m1_problem.json -m selvaggio_m1_markers.json -c selvaggio_m1_control.json selvaggio_emt
 
 biomarkers steady-states -p selvaggio_m1_problem.json --table

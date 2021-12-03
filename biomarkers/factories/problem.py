@@ -9,7 +9,7 @@ from biomarkers.marker_detection.problem import Problem
 
 def problem_from_primes(primes: dict, max_steady_states: int = 10000, max_marker_size: Optional[int] = None) -> Problem:
     steady_states = [list(map(int, x)) for x in compute_steady_states(primes=primes, max_output=max_steady_states, representation="str")]
-    problem = Problem(steady_states=steady_states, max_marker_size=max_marker_size)
+    problem = Problem(steady_states=steady_states, max_marker_size=max_marker_size, component_names=sorted(primes))
 
     return problem
 
