@@ -5,6 +5,7 @@ import sys
 from collections import defaultdict
 from typing import List, Dict, Callable
 
+import click
 import pandas as pd
 from pyboolnet.prime_implicants import create_constants
 from pyboolnet.trap_spaces import steady_states as compute_steady_states
@@ -15,7 +16,7 @@ from biomarkers.pyboolnet_extensions import percolate_and_find_new_constants, is
 log = logging.getLogger(__name__)
 
 
-def try_to_run_control_or_exit(markers: Markers) -> pd.DataFrame:
+def try_to_run_control_or_exit(markers: Markers, limit: int) -> pd.DataFrame:
     if not markers.problem.phenotype_subspace:
         log.error("control requires a phenotype subspace, try a different problem file.")
         sys.exit(1)
@@ -26,33 +27,36 @@ def try_to_run_control_or_exit(markers: Markers) -> pd.DataFrame:
     desired_subspaces = [markers.problem.phenotype_subspace]
     desired_steady_states = filter_states_by_containment_in_subspaces(states=markers.problem.steady_states, subspaces=desired_subspaces)
     data = defaultdict(list)
+    scenarios = markers.indices[:limit] if limit else markers.indices
 
-    for marker_components in markers.indices:
-        marker_types = find_projections(states=desired_steady_states, components=marker_components)
+    with click.progressbar(scenarios, label="Checking each marker set for control strategies") as markers_indices:
 
-        for marker_type in marker_types:
-            constants = {component_names[x]: y for x, y in zip(marker_components, marker_type)}
-            new_primes = create_constants(primes=primes, constants=constants, copy=True)
+        for indices in markers_indices:
+            marker_types = find_projections(states=desired_steady_states, components=indices)
 
-            new_steady_states = [list(map(int, x)) for x in compute_steady_states(primes=new_primes, max_output=5000, representation="str")]
-            red_states, green_states = [], []
+            for marker_type in marker_types:
+                constants = {component_names[x]: y for x, y in zip(indices, marker_type)}
+                new_primes = create_constants(primes=primes, constants=constants, copy=True)
 
-            for state in new_steady_states:
-                if any(all(state[x] == subspace[x] for x in subspace) for subspace in desired_subspaces):
-                    green_states.append(state)
-                else:
-                    red_states.append(state)
+                new_steady_states = [list(map(int, x)) for x in compute_steady_states(primes=new_primes, max_output=5000, representation="str")]
+                red_states, green_states = [], []
 
-            percolated_constants = percolate_and_find_new_constants(primes=new_primes)
+                for state in new_steady_states:
+                    if any(all(state[x] == subspace[x] for x in subspace) for subspace in desired_subspaces):
+                        green_states.append(state)
+                    else:
+                        red_states.append(state)
 
-            data["markers"].append(marker_components)
-            data["markers_names"].append([component_names[x] for x in marker_components])
-            data["control"].append(marker_type)
-            data["green_states"].append(len(green_states))
-            data["red_states"].append(len(red_states))
-            data["n_percolation"].append(len(percolated_constants))
-            data["percolated_phenotype"].append(any(all(component_names[x] in percolated_constants for x in subspace) for subspace in desired_subspaces))
-            data["is_trap_space"].append(is_trap_space(primes=primes, subspace={component_names[k]: v for k, v in zip(marker_components, marker_type)}))
+                percolated_constants = percolate_and_find_new_constants(primes=new_primes)
+
+                data["markers"].append(indices)
+                data["markers_names"].append([component_names[x] for x in indices])
+                data["control"].append(marker_type)
+                data["green_states"].append(len(green_states))
+                data["red_states"].append(len(red_states))
+                data["n_percolation"].append(len(percolated_constants))
+                data["percolated_phenotype"].append(any(all(component_names[x] in percolated_constants for x in subspace) for subspace in desired_subspaces))
+                data["is_trap_space"].append(is_trap_space(primes=primes, subspace={component_names[k]: v for k, v in zip(indices, marker_type)}))
 
     df = pd.DataFrame(data=data)
     print(df)

@@ -1,11 +1,37 @@
 
 
 import json
+import logging
+import sys
 from typing import List
 
 import click
+import pandas as pd
 
 COLORS = {int: "white", str: "green", None: "gray", "key": "blue"}
+
+log = logging.getLogger(__name__)
+
+
+def export_df(df: pd.DataFrame, fname: str):
+    if "." not in fname:
+        log.error(f"unspecified extension, cannot export data frame: fname={fname}")
+        sys.exit(1)
+
+    ext = fname.split(".")[1]
+
+    if ext == "tex":
+        text = df.to_latex()
+    elif ext == "csv":
+        text = df.to_csv()
+    elif ext == "md":
+        text = df.to_markdown()
+    else:
+        log.error(f"unknown extension, cannot export data frame: fname={fname}")
+        sys.exit(1)
+
+    with open(fname, "w") as fp:
+        fp.write(text)
 
 
 def read_json_file_and_print_summary(fname: str, suppress_keys: List[str]):
