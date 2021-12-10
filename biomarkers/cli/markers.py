@@ -38,9 +38,8 @@ def markers_info(fname_markers: str):
 
 @click.command("markers-export")
 @click.option("-m", "--markers", "fname_markers", nargs=1, default="tmp_markers.json", show_default=True, help="Name of markers file.")
-@click.option("--csv", "fname_csv", nargs=1, default="markers.csv", show_default=True, help="Name of csv file.")
-@click.option("--header", "enable_header", is_flag=True, default=False, show_default=True, nargs=1, help="If header is enabled, all rows consist of 0 / 1 values.")
-def markers_export(fname_markers: str, fname_csv: str, enable_header: bool):
+@click.option("--csv", "fname_csv", nargs=1, default="tmp_markers.csv", show_default=True, help="Name of csv file.")
+def markers_export(fname_markers: str, fname_csv: str):
     """
     Exports markers as CSV.
 
@@ -48,8 +47,8 @@ def markers_export(fname_markers: str, fname_csv: str, enable_header: bool):
     """
 
     markers = try_to_load_markers_or_exit(fname=fname_markers)
-    #markers.to_csv(fname=fname_csv, enable_header=enable_header)
-    print(markers.to_df())
+    df = markers.to_csv(fname=fname_csv)
+    print(df)
 
 
 @click.command("markers-validate")

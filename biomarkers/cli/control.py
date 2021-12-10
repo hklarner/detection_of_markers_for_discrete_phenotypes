@@ -1,5 +1,8 @@
 
 
+from datetime import timedelta
+from time import time
+
 import click
 
 from biomarkers.tools.control import try_to_run_control_or_exit
@@ -19,7 +22,11 @@ def control_create(fname_markers: str, fname_control: str):
 
     markers = try_to_load_markers_or_exit(fname=fname_markers)
 
+    time_start = time()
     df = try_to_run_control_or_exit(markers=markers)
+    time_end = time()
+
+    print(f"cpu time: {timedelta(seconds=time_end - time_start)}")
 
     if fname_control:
         df.to_csv(fname_control)
@@ -30,5 +37,5 @@ if __name__ == "__main__":
     markers = try_to_load_markers_or_exit(fname="../../selvaggio_m1_markers.json")
     primes = try_to_load_primes_or_exit(bnet_name="selvaggio_emt")
 
-    control_summary = try_to_run_control_or_exit(problem=problem, markers=markers, primes=primes)
+    control_summary = try_to_run_control_or_exit(markers=markers)
 

@@ -37,30 +37,20 @@ class Markers(BaseModel, ToJsonMixin):
         else:
             print(f"markers.indices={self.indices}")
 
-    def to_csv(self, fname: str, enable_header: bool = False):
-        if enable_header:
-            if self.problem:
-                lines = [[self.problem.component_names[x] for x in self.unique_indices]]
-                lines += [[self.problem.component_names[x] for x in markers] for markers in self.indices]
-            else:
-                lines = [str(x) for x in self.unique_indices]
-                lines += [[str(x) for x in markers] for markers in self.indices]
-        else:
-            if self.problem:
-                lines = [[self.problem.component_names[x] for x in markers] for markers in self.indices]
-            else:
-                lines = [[str(x) for x in markers] for markers in self.indices]
-
-        with open(fname, "w") as fp:
-            fp.write('\n'.join(', '.join(line) for line in lines))
+    def to_csv(self, fname: str) -> pd.DataFrame:
+        df = self.to_df()
+        df.to_csv(fname, index=False)
 
         log.info(f"created csv file: fname={fname}")
 
+        return df
+
     def to_df(self) -> pd.DataFrame:
-        data = {name: [] for name in sorted(self.unique_indices)}
+        data = {self.problem.component_names[x]: [] for x in self.unique_indices}
+
         for indices in self.indices_named:
             for name in data:
-                data[name].apppend(1 if name in indices else 0)
+                data[name].append(1 if name in indices else 0)
 
         return pd.DataFrame(data=data)
 
