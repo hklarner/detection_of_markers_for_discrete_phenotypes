@@ -1,8 +1,11 @@
 #!/bin/bash
 
-biomarkers problem-create -p selvaggio_m1_problem.json --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0,FA_b1=1,FA_b2=0,FA_b3=0 --max-markers 3
-biomarkers problem-solve -p selvaggio_m1_problem.json -m selvaggio_m1_markers.json
 
-biomarkers control-create -p selvaggio_m1_problem.json -m selvaggio_m1_markers.json -c selvaggio_m1_control.json selvaggio_emt
+echo creating selvaggio_m1 problem and markers
+biomarkers problem-create --problem selvaggio_problem.json --bnet selvaggio_emt --phenotype AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3
+biomarkers problem-solve --problem selvaggio_problem.json --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --marker-size-max 10 --markers selvaggio_markers.json
 
-biomarkers steady-states -p selvaggio_m1_problem.json --table
+echo creating markers graph
+biomarkers markers-graph --markers selvaggio_markers.json -g selvaggio_markers_graph.pdf selvaggio_emt
+
+# clingo --models=0 --opt-mode=optN --enum-mode=domRec --heuristic=Domain --dom-mod=5,16 tmp_program.asp

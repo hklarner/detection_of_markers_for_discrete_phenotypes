@@ -7,8 +7,8 @@ from biomarkers.tools.marker_detection import try_to_load_problem_or_exit
 
 
 @click.command("asp-export")
-@click.option("-p", "--problem", "fname_problem", nargs=1, default="problem.json", show_default=True, help="File name of the marker detection problem.")
-@click.option("--program", "fname_asp", nargs=1, default="program.asp", show_default=True, help="Name of asp file.")
+@click.option("-p", "--problem", "fname_problem", nargs=1, default="tmp_problem.json", show_default=True, help="File name of the marker detection problem.")
+@click.option("--program", "fname_asp", nargs=1, default="tmp_program.asp", show_default=True, help="Name of asp file.")
 def asp_export(fname_problem: str, fname_asp: str):
     """
     Exports or prints asp program.

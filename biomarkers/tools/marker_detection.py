@@ -14,7 +14,7 @@ from biomarkers.marker_detection.problem import Problem
 log = logging.getLogger(__name__)
 
 
-def try_to_create_marker_detection_problem_or_exit(primes: dict, forbidden: List[str], phenotype_components: List[str], phenotype_subspace: dict, max_steady_states: int) -> Problem:
+def try_to_create_marker_detection_problem_or_exit(primes: dict, phenotype_components: List[str], phenotype_subspace: dict, max_steady_states: int) -> Problem:
     names = sorted(primes)
     steady_states = [[int(x[k]) for k in names] for x in compute_steady_states(primes=primes, max_output=max_steady_states)]
 
@@ -22,14 +22,12 @@ def try_to_create_marker_detection_problem_or_exit(primes: dict, forbidden: List
         if phenotype_subspace:
             phenotype_subspace = {names.index(x): phenotype_subspace[x] for x in phenotype_subspace}
             phenotype_indices = phenotype_indices_from_subspace(steady_states=steady_states, phenotype_subspace=phenotype_subspace)
-            problem = Problem(component_names=names, steady_states=steady_states, phenotype_indices=phenotype_indices, phenotype_subspace=phenotype_subspace)
+            problem = Problem(primes=primes, component_names=names, steady_states=steady_states, phenotype_indices=phenotype_indices, phenotype_subspace=phenotype_subspace)
         else:
             phenotype_components = [names.index(x) for x in phenotype_components]
             phenotype_indices = phenotype_indices_from_components(steady_states=steady_states, phenotype_components=phenotype_components)
-            problem = Problem(component_names=names, steady_states=steady_states, phenotype_components=phenotype_components, phenotype_indices=phenotype_indices)
+            problem = Problem(primes=primes, component_names=names, steady_states=steady_states, phenotype_components=phenotype_components, phenotype_indices=phenotype_indices)
 
-        if forbidden:
-            problem.forbidden_marker_components = [names.index(x) for x in forbidden]
     except Exception as error:
         log.error(f"failed to create marker detection problem: error={error}")
         sys.exit(1)

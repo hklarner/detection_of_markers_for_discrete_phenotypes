@@ -1,9 +1,14 @@
+
+
+import sys
+
 from biomarkers.factories.program import program_from_problem
 from biomarkers.marker_detection.markers import Markers
+from biomarkers.marker_detection.options import Options
 from biomarkers.marker_detection.problem import Problem
 
 
-def markers_from_problem(problem: Problem) -> Markers:
+def markers_from_problem(problem: Problem, options: Options, dry: bool) -> Markers:
     """
     for future reference:
 
@@ -15,9 +20,14 @@ def markers_from_problem(problem: Problem) -> Markers:
     ```
     """
 
-    program = program_from_problem(problem=problem)
+    program = program_from_problem(problem=problem, options=options)
+    program.to_asp(fname="tmp_program.asp")
+
+    if dry:
+        sys.exit()
+
     indices = program.solve()
-    markers = Markers(indices=indices, component_names=problem.component_names)
+    markers = Markers(indices=indices, problem=problem, options=options)
 
     return markers
 
@@ -25,5 +35,5 @@ def markers_from_problem(problem: Problem) -> Markers:
 if __name__ == "__main__":
     from biomarkers.tools.marker_detection import try_to_load_problem_or_exit
 
-    markers = markers_from_problem(problem=try_to_load_problem_or_exit(fname="../../n7s3_problem.json"))
+    markers = markers_from_problem(problem=try_to_load_problem_or_exit(fname="../../n7s3_problem.json"), options=Options())
     pass

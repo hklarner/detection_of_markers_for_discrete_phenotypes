@@ -7,6 +7,16 @@ from typing import List, Optional
 log = logging.getLogger(__name__)
 
 
+def indexify_names_or_exit(names: List[str], subset: List[str]) -> List[int]:
+    diff = set(subset).difference(set(names))
+
+    if diff:
+        print(f"cannot create indices for names: names={names}, subset={subset}")
+        sys.exit(1)
+
+    return [names.index(x) for x in subset]
+
+
 def assert_exclusive_arguments_or_exit(**kwargs):
     if len([value for key, value in kwargs.items() if value]) > 1:
         log.error(f"exactly one of the arguments must be given: {list(kwargs.items())}")

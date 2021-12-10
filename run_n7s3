@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+echo creating n7s3 problem and markers
+biomarkers problem-create --problem n7s3_problem.json --bnet n7s3 --phenotype v1,v2
+biomarkers problem-solve --problem n7s3_problem.json --forbidden v1,v2 --max-markers 2 --markers n7s3_markers.json
+
+echo creating n7s3 markers graph
+biomarkers markers-graph --markers n7s3_markers.json -g n7s3_markers_graph.pdf n7s3

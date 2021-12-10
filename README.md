@@ -20,7 +20,7 @@ To install the master branch use:
 
 ``` 
 pip3 install pip --upgrade
-pip3 install git+https://github.com/hklarner/detection_of_markers_for_discrete_phenotypes
+pip3 install --force-reinstall git+https://github.com/hklarner/detection_of_markers_for_discrete_phenotypes
 ```
 
 To install a tagged version use the `@`: 
@@ -36,7 +36,7 @@ For help on the available commands call `biomarkers -h`.
 ### problem-create
 To create a marker detection problem use the command `problem-create`:
 ```
-biomarkers problem-create --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0,FA_b1=1,FA_b2=0,FA_b3=0 --max-markers 3
+biomarkers problem-create --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0,FA_b1=1,FA_b2=0,FA_b3=0 marker-size-max 3
 ```
 
 ### problem-solve

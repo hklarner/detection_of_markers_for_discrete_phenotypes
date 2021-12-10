@@ -1,9 +1,5 @@
-
-
-from collections import defaultdict
-from typing import List, Optional
-
 import click
+import pandas as pd
 
 from biomarkers.marker_detection.problem import Problem
 
@@ -29,16 +25,6 @@ def echo_steady_state_matrix(problem: Problem):
     click.echo()
 
 
-def print_phenotype_table(steady_states: List[List[int]], phenotype_indices: List[int], phenotype_components: Optional[List[str]] = None):
-    states_by_pheno_index = defaultdict(list)
+def print_phenotype_table(problem: Problem):
+    print(pd.DataFrame(data={"phenotype_index": problem.phenotype_indices}).value_counts(sort=False).to_frame(name="count"))
 
-    for ix, iy in enumerate(phenotype_indices):
-        states_by_pheno_index[iy].append(steady_states[ix])
-
-    phenotype_by_index = {}
-    if phenotype_components:
-        for px, states in states_by_pheno_index.items():
-            phenotype_by_index[px] = (states[0][x] for x in phenotype_components)
-
-    for px in sorted(states_by_pheno_index):
-        print(f"{px: >2} {phenotype_by_index.get(px, '')}: {len(states_by_pheno_index[px])}")
