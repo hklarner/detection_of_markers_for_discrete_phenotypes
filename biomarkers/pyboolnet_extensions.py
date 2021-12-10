@@ -2,8 +2,36 @@
 
 from typing import Dict
 
+import networkx
 from pyboolnet.prime_implicants import find_constants
 from pyboolnet.prime_implicants import percolate
+
+
+def add_style_cascades(igraph: networkx.DiGraph, penwidth: int = 5, color: str = "black"):
+    """
+    Increases the pen width of edges whose targets are of in-degree one.
+
+    **arguments**:
+        * *igraph*: interaction graph
+        * *penwidth*: pen width of cascade edges
+
+    **example**::
+
+          >>> add_style_cascades(igraph)
+    """
+
+    for source, target in igraph.edges():
+        if source == target:
+            continue
+        if igraph.in_degree(target) == 1:
+            igraph[source][target]["penwidth"] = penwidth
+            igraph[source][target]["color"] = color
+
+            igraph.nodes[source]["penwidth"] = penwidth
+            igraph.nodes[source]["color"] = "black"
+
+            igraph.nodes[target]["penwidth"] = penwidth
+            igraph.nodes[target]["color"] = "black"
 
 
 def percolate_and_find_new_constants(primes: dict) -> Dict[str, int]:
