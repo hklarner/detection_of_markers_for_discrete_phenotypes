@@ -32,7 +32,7 @@ def factorize_marker_sets_and_print_result(markers: Markers):
         sum_ = len(marker_sets_by_size[size])
         remainder = sum_ - product
 
-        print(f"{size:< 2}: {' x '.join(f'{{{s}}}' for s in factors)}{f' + Remainder({remainder})' if remainder else ''}")
+        print(f"{size:< 2}: {' x '.join(f'{{{s}}}' for s in factors)}{f' x Remainder({remainder})' if remainder else ''}")
 
 
 def create_marker_sets_by_size(markers: Markers) -> Dict[int, List[Set[int]]]:
