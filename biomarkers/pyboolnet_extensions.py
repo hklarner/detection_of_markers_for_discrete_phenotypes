@@ -1,10 +1,28 @@
 
 
-from typing import Dict
+from typing import Dict, Optional
 
 import networkx
+from pyboolnet.interaction_graphs import primes2igraph, igraph2image
 from pyboolnet.prime_implicants import find_constants
 from pyboolnet.prime_implicants import percolate
+
+
+def create_percolated_igraph(primes: dict, fname: Optional[str] = None) -> networkx.DiGraph:
+    igraph = primes2igraph(primes=primes)
+    primes_new = percolate(primes=primes, copy=True)
+    igraph_new = primes2igraph(primes=primes_new)
+
+    edges = set(igraph.edges)
+    edges_new = set(igraph_new.edges)
+
+    for e in edges.difference(edges_new):
+        igraph.edges[e]["color"] = "0.6 0.5 1.0"
+
+    if fname:
+        igraph2image(igraph=igraph, fname_image=fname, layout_engine="dot")
+
+    return igraph_new
 
 
 def add_style_cascades(igraph: networkx.DiGraph, penwidth: int = 5, color: str = "black"):
@@ -69,15 +87,10 @@ def is_trap_space(primes: dict, subspace: Dict[str, int]) -> bool:
 
 if __name__ == "__main__":
     from pyboolnet.repository import get_primes
-    from pyboolnet.trap_spaces import trap_spaces as compute_trap_spaces
+    from pyboolnet.prime_implicants import create_constants
 
     primes = get_primes(name="selvaggio_emt")
-    trap_spaces = compute_trap_spaces(primes=primes)
 
-    for trap_space in trap_spaces:
-        for k in trap_space:
-            break
-        trap_space[k] = 1 - trap_space[k]
-        print(is_trap_space(primes=primes, subspace=trap_space))
+    create_percolated_igraph(primes=create_constants(primes=primes, constants={"RAF1": 1}, copy=True), fname="junk.pdf")
 
 

@@ -16,11 +16,10 @@ from biomarkers.pyboolnet_extensions import add_style_cascades
 def create_marker_frequency_graph(markers: Markers, fname: Optional[str] = None) -> DiGraph:
     frequencies = component_frequencies_from_markers(markers=markers)
     total = len(markers.indices)
-    fillcolor = "0.1 {:.1f} 1.0"
 
     igraph = primes2igraph(primes=markers.problem.primes)
     igraph.graph["edge"]["color"] = "gray"
-    igraph.graph["label"] = f"Marker frequencies and cascades\nlen(markers)={total}"
+    igraph.graph["label"] = f"len(marker_sets)={total}"
     igraph.graph["fontsize"] = 40
     add_style_cascades(igraph=igraph)
 
@@ -29,12 +28,17 @@ def create_marker_frequency_graph(markers: Markers, fname: Optional[str] = None)
     for node, frequency in frequencies.items():
         perc = frequency / total
         node_name = markers.problem.component_names[node]
-        igraph.nodes[node_name]["fillcolor"] = fillcolor.format(perc)
+        igraph.nodes[node_name]["fillcolor"] = f"0.1 {perc:.1f} 1.0"
         igraph.nodes[node_name]["label"] = f"{node_name}\nk={frequency}\np={perc:.1f}"
 
         data["name"].append(node_name)
         data["count"].append(frequency)
         data["likelihood"].append(perc)
+
+    if markers.problem.phenotype_components:
+        for node in markers.problem.phenotype_components:
+            node_name = markers.problem.component_names[node]
+            igraph.nodes[node_name]["fillcolor"] = "0.6 0.5 1.0"
 
     if fname:
         igraph2image(igraph=igraph, fname_image=fname, layout_engine="dot")

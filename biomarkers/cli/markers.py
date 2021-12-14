@@ -5,6 +5,7 @@ import click
 from biomarkers.tools.graphs import create_marker_frequency_graph
 from biomarkers.tools.marker_detection import try_to_load_problem_or_exit, try_to_load_markers_or_exit
 from biomarkers.tools.parsing import try_to_parse_comma_separated_values_or_exit
+from biomarkers.tools.set_factorization import factorize_marker_sets_and_print_result
 from biomarkers.tools.validation import validate_marker_set_and_print_result
 
 
@@ -66,15 +67,16 @@ def markers_validate(fname_problem: str, markers_text: str):
 
 
 @click.command("markers-factorize")
-@click.option("-m", "--markers", "markers_text", nargs=1, help="Marker components to validate, comma separated.")
-def markers_factorize(fname_problem: str, markers_text: str):
+@click.option("-m", "--markers", "fname_markers", nargs=1, default="tmp_markers.json", show_default=True, help="Name of markers file.")
+def markers_factorize(fname_markers: str):
     """
     Factorizes a marker set.
 
-    biomarkers markers-factorize -m RAP1,ERK,p120_AJ
+    biomarkers markers-factorize -m markers.json
     """
 
-    pass
+    markers = try_to_load_markers_or_exit(fname=fname_markers)
+    factorize_marker_sets_and_print_result(markers=markers)
 
 
 
