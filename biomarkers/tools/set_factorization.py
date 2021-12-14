@@ -30,9 +30,13 @@ def factorize_marker_sets_and_print_result(markers: Markers):
 
         product = prod(map(len, factors))
         sum_ = len(marker_sets_by_size[size])
-        remainder = sum_ - product
+        remainder = sum_ / product
+        r = int(remainder)
 
-        print(f"{size:< 2}: {' x '.join(f'{{{s}}}' for s in factors)}{f' x Remainder({remainder})' if remainder else ''}")
+        if remainder != r:
+            print(f"encountered error in factorization algorithm: product={product}, sum={sum_}, remainder={remainder}")
+
+        print(f"{size:< 2}: {' x '.join(f'{{{s}}}' for s in factors)}{f' x Remainder({r})' if r != 1 else ''}")
 
 
 def create_marker_sets_by_size(markers: Markers) -> Dict[int, List[Set[int]]]:
