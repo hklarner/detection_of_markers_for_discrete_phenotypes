@@ -57,4 +57,4 @@ class Markers(BaseModel, ToJsonMixin):
         return pd.DataFrame(data=data)
 
     class Config:
-        keep_untouched = (cached_property,)
+        keep_untouched = (property,)
