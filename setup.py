@@ -15,7 +15,7 @@ setup(
         "pandas==1.1.0",
         "pytest==6.0.1",
         "clingo==5.5.0.post3",
-        "pyboolnet @ git+https://github.com/hklarner/pyboolnet@3.0.5"
+        "pyboolnet @ git+https://github.com/hklarner/pyboolnet"
     ],
     entry_points="""
         [console_scripts]
