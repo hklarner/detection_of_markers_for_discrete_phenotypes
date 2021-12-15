@@ -26,6 +26,7 @@ logging.getLogger("pyboolnet").setLevel(logging.ERROR)
 def main(ctx, version: bool):
     if version:
         click.echo(f"version: {read_version_txt()}")
+        click.echo(f"python-version: {sys.version_info}")
 
     if ctx.invoked_subcommand is None and len(sys.argv) == 1:
         click.echo(main.get_help(ctx))
