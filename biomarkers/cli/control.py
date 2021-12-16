@@ -16,7 +16,8 @@ from biomarkers.tools.parsing import try_to_parse_comma_separated_values_or_exit
 @click.option("-c", "--control", "fname_control", nargs=1, default="tmp_control.csv", show_default=True, help="Name of the control csv file.")
 @click.option("-e", "--export", "fname_export", nargs=1, default="tmp_control.tex", show_default=True, help="Name of the exported file.")
 @click.option("-d", "--drop", "columns_text", nargs=1, default="markers_names", show_default=True, help="Comma separated column names to drop.")
-def control_export(fname_control: str, fname_export: str, columns_text: str):
+@click.option("-g", "--green-only", is_flag=True, default=False, help="Only export rows with 0 red states.")
+def control_export(fname_control: str, fname_export: str, columns_text: str, green_only: bool):
     """
     Export a control file.
 
@@ -25,9 +26,10 @@ def control_export(fname_control: str, fname_export: str, columns_text: str):
 
     columns = try_to_parse_comma_separated_values_or_exit(text=columns_text)
     df = pd.read_csv(fname_control)
+    df = df[df["red_states"] == 0] if green_only else df
     df.drop(columns=columns, inplace=True)
 
-    export_df(df=df, fname=fname_export)
+    print(export_df(df=df, fname=fname_export))
 
 
 @click.command("control-create")
