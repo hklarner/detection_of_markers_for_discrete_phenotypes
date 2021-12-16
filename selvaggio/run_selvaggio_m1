@@ -1,0 +1,9 @@
+#!/bin/bash
+
+
+echo creating selvaggio_m1 problem and markers
+biomarkers problem-create --problem selvaggio_m1_problem.json  --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0,FA_b1=1,FA_b2=0,FA_b3=0
+biomarkers problem-solve --problem selvaggio_m1_problem.json --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --markers selvaggio_m1_markers.json --marker-size-max 4
+
+echo creating control summary
+biomarkers control-create --markers selvaggio_m1_markers.json --control selvaggio_m1_control.json

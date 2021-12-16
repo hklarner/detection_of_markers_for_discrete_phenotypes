@@ -28,7 +28,7 @@ def create_marker_frequency_graph(markers: Markers, fname: Optional[str] = None)
     for node, frequency in frequencies.items():
         perc = frequency / total
         node_name = markers.problem.component_names[node]
-        igraph.nodes[node_name]["fillcolor"] = f"0.1 {perc:.1f} 1.0"
+        igraph.nodes[node_name]["fillcolor"] = f"0.1 {perc+0.2:.1f} 1.0"
         igraph.nodes[node_name]["label"] = f"{node_name}\nk={frequency}\np={perc:.1f}"
 
         data["name"].append(node_name)

@@ -13,7 +13,7 @@ COLORS = {int: "white", str: "green", None: "gray", "key": "blue"}
 log = logging.getLogger(__name__)
 
 
-def export_df(df: pd.DataFrame, fname: str):
+def export_df(df: pd.DataFrame, fname: str) -> str:
     if "." not in fname:
         log.error(f"unspecified extension, cannot export data frame: fname={fname}")
         sys.exit(1)
@@ -21,17 +21,19 @@ def export_df(df: pd.DataFrame, fname: str):
     ext = fname.split(".")[1]
 
     if ext == "tex":
-        text = df.to_latex()
+        text = df.to_latex(index=False)
     elif ext == "csv":
-        text = df.to_csv()
+        text = df.to_csv(index=False)
     elif ext == "md":
-        text = df.to_markdown()
+        text = df.to_markdown(index=False)
     else:
         log.error(f"unknown extension, cannot export data frame: fname={fname}")
         sys.exit(1)
 
     with open(fname, "w") as fp:
         fp.write(text)
+
+    return text
 
 
 def read_json_file_and_print_summary(fname: str, suppress_keys: List[str]):

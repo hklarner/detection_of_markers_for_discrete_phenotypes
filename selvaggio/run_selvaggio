@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# internal components
+# EGFR,HGFR,ITG_AB,FAK_SRC,RAS,RAF1,MEK,ERK,PI3K,ILK,AKT,GSK3B,DVL,CK1,FAT4,LATS,NOTCH,YAP_TAZ,RPTP,RAP1,TGFBR,JAK,BCat,NFkB,SMAD,STAT3,JNK,HIF1a,PAK,CSL,TCF_LEF,SNAIL,SLUG,ZEB,miR200,ECad,ECad_AJ,BCat_AJ,p120_AJ
+# complement
+#
+
+AJ0="AJ_b1=0,AJ_b2=0"
+AJ1="AJ_b1=1,AJ_b2=0"
+AJ2="AJ_b1=1,AJ_b2=1"
+FA0="FA_b1=0,FA_b2=0,FA_b3=0"
+FA1="FA_b1=1,FA_b2=0,FA_b3=0"
+FA2="FA_b1=1,FA_b2=1,FA_b3=0"
+FA3="FA_b1=1,FA_b2=1,FA_b3=1"
+
+M1=$AJ0,$FA1
+M2=$AJ0,$FA2
+M3=$AJ0,$FA3
+
+H1=$AJ2,$FA1
+H2=$AJ1,$FA2
+H3=$AJ2,$FA3
+
+FORBIDDEN="AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3"
+MARKER_MAX=5
+
+
+echo computing m1 markers
+biomarkers problem-create --problem m1_problem.json --bnet selvaggio_emt --phenotype $M1
+biomarkers problem-solve --problem m1_problem.json --forbidden $FORBIDDEN --marker-size-max $MARKER_MAX --markers m1_markers.json
+biomarkers markers-graph --markers m1_markers.json --graph m1_markers_graph.pdf
+biomarkers control-create --markers m1_markers.json --control m1_control.json
+biomarkers control-export --control m1_control.json --export m1_control.tex --drop markers_names,red_states --green-only
+
+biomarkers markers-factorize --markers m1_markers.json
