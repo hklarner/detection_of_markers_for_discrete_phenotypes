@@ -1,7 +1,7 @@
 
 
 import logging
-from functools import lru_cache
+from functools import cached_property
 from typing import List
 
 import pandas as pd
@@ -22,13 +22,11 @@ class Markers(BaseModel, ToJsonMixin):
     def __len__(self) -> int:
         return len(self.indices)
 
-    @property
-    @lru_cache()
+    @cached_property
     def indices_named(self) -> List[List[str]]:
         return [[self.problem.component_names[x] for x in indices] for indices in self.indices]
 
-    @property
-    @lru_cache()
+    @cached_property
     def unique_indices(self) -> List[int]:
         return sorted(set(x for markers in self.indices for x in markers))
 
@@ -57,4 +55,4 @@ class Markers(BaseModel, ToJsonMixin):
         return pd.DataFrame(data=data)
 
     class Config:
-        keep_untouched = (property,)
+        keep_untouched = (cached_property,)

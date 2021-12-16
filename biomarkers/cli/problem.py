@@ -23,16 +23,17 @@ from biomarkers.tools.steady_states import print_phenotype_table
 @click.option("--enable-one-to-one", is_flag=True, default=False, help="Enables 1-to-1 consistency between marker types and phenotypes.")
 @click.option("--forbidden", "forbidden_text", nargs=1, help="Components that are not allowed as markers, comma-separated.")
 @click.option("--marker-size-max", "marker_size_max", type=int, nargs=1, help="Limits the maximal size of a marker set.")
+@click.option("--marker-size-min", "marker_size_min", type=int, nargs=1, default=1, show_default=True, help="Limits the minimal size of a marker set.")
 @click.option("--dry", is_flag=True, default=False, help="Prints ASP program and stops.")
-def problem_solve(fname_problem: str, fname_markers: str, enable_one_to_one: bool, forbidden_text: str, marker_size_max: int, dry: bool):
+def problem_solve(fname_problem: str, fname_markers: str, enable_one_to_one: bool, forbidden_text: str, marker_size_max: int, marker_size_min: int, dry: bool):
     """
     Solves a marker detection problem.
     """
 
     problem = try_to_load_problem_or_exit(fname=fname_problem)
     forbidden_names = try_to_parse_comma_separated_values_or_exit(text=forbidden_text) if forbidden_text else None
-    forbidden = indexify_names_or_exit(names=problem.component_names, subset=forbidden_names)
-    options = Options(forbidden=forbidden, enable_one_to_one=enable_one_to_one, marker_size_max=marker_size_max)
+    forbidden = indexify_names_or_exit(names=problem.component_names, subset=forbidden_names) if forbidden_names else []
+    options = Options(forbidden=forbidden, enable_one_to_one=enable_one_to_one, marker_size_max=marker_size_max, marker_size_min=marker_size_min)
 
     time_start = time()
     markers = markers_from_problem(problem=problem, options=options, dry=dry)

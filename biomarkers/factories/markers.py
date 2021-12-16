@@ -8,7 +8,7 @@ from biomarkers.marker_detection.options import Options
 from biomarkers.marker_detection.problem import Problem
 
 
-def markers_from_problem(problem: Problem, options: Options, dry: bool) -> Markers:
+def markers_from_problem(problem: Problem, options: Options, dry: bool = False) -> Markers:
     """
     for future reference:
 
