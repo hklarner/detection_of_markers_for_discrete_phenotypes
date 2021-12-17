@@ -29,7 +29,7 @@ def control_export(fname_control: str, fname_export: str, columns_text: str, gre
     df = df[df["red_states"] == 0] if green_only else df
     df.drop(columns=columns, inplace=True)
 
-    print(export_df(df=df, fname=fname_export))
+    export_df(df=df, fname=fname_export)
 
 
 @click.command("control-create")

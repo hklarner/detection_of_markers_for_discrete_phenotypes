@@ -2,7 +2,7 @@
 
 import click
 
-from biomarkers.tools.graphs import create_marker_frequency_graph
+from biomarkers.graphs.marker_frequency import create_marker_frequency_graph
 from biomarkers.tools.marker_detection import try_to_load_problem_or_exit, try_to_load_markers_or_exit
 from biomarkers.tools.parsing import try_to_parse_comma_separated_values_or_exit
 from biomarkers.tools.set_factorization import factorize_marker_sets_and_print_result

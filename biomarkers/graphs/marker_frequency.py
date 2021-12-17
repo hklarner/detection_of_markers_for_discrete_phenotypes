@@ -71,5 +71,3 @@ if __name__ == "__main__":
     create_marker_frequency_graph(primes=primes, markers=markers, fname="../../marker_frequency_graph.pdf")
 
     sys.exit()
-
-

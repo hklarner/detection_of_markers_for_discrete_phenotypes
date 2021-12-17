@@ -10,10 +10,9 @@ from biomarkers import read_version_txt
 from biomarkers.cli.control import control_create, control_export
 from biomarkers.cli.json_command import json_info
 from biomarkers.cli.markers import markers_factorize, markers_validate, markers_export, markers_info, markers_graph
-from biomarkers.cli.problem import problem_create, problem_info
-from biomarkers.cli.problem import problem_solve
+from biomarkers.cli.problem import problem_create, problem_info, problem_solve
 from biomarkers.cli.repo import repo
-from biomarkers.cli.steady_states import steady_states_matrix
+from biomarkers.cli.steady_states import steady_states_matrix, steady_state_correlation
 
 log = logging.getLogger()
 logging.basicConfig(format="%(message)s", stream=sys.stdout, level=logging.DEBUG, force=True)
@@ -44,6 +43,7 @@ main.add_command(markers_graph)
 main.add_command(problem_info)
 main.add_command(markers_factorize)
 main.add_command(steady_states_matrix)
+main.add_command(steady_state_correlation)
 main.add_command(control_create)
 main.add_command(control_export)
 main.add_command(json_info)
