@@ -16,20 +16,33 @@ FA3="FA_b1=1,FA_b2=1,FA_b3=1"
 M1=$AJ0,$FA1
 M2=$AJ0,$FA2
 M3=$AJ0,$FA3
-
 H1=$AJ2,$FA1
 H2=$AJ1,$FA2
 H3=$AJ2,$FA3
+E1=$AJ2,$FA0
+UN=$AJ0,$FA0
+M=$AJ0,"FA_b1=1"
 
 FORBIDDEN="AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3"
 MARKER_MAX=5
 
+SUBSPACES=($M1 $M2 $M3 $H1 $H2 $H3 $E1 $UN $M)
+NAMES=(m1 m2 m3 h1 h2 h3 e1 un m)
 
-echo computing m1 markers
-biomarkers problem-create --problem m1_problem.json --bnet selvaggio_emt --phenotype $M1
-biomarkers problem-solve --problem m1_problem.json --forbidden $FORBIDDEN --marker-size-max $MARKER_MAX --markers m1_markers.json
-biomarkers markers-graph --markers m1_markers.json --graph m1_markers_graph.pdf
-biomarkers control-create --markers m1_markers.json --control m1_control.json
-biomarkers control-export --control m1_control.json --export m1_control.tex --drop markers_names,red_states --green-only
+SUBSPACES=($H1 $H2 $H3 $E1 $UN $M)
+NAMES=(h1 h2 h3 e1 un m)
 
-biomarkers markers-factorize --markers m1_markers.json
+echo_and_run() { echo "\$ $*" ; "$@" ; }
+
+echo computing steady state correlation graph
+echo_and_run biomarkers steady-states-correlation -p m_problem.json -g steady_state_correlation.pdf
+
+for i in "${!SUBSPACES[@]}"; do
+  echo computing ${NAMES[$i]} markers
+  echo_and_run biomarkers problem-create --problem ${NAMES[$i]}_problem.json --bnet selvaggio_emt --phenotype ${SUBSPACES[$i]}
+  echo_and_run biomarkers problem-solve --problem ${NAMES[$i]}_problem.json --forbidden $FORBIDDEN --marker-size-max $MARKER_MAX --markers ${NAMES[$i]}_markers.json
+  echo_and_run biomarkers markers-graph --markers ${NAMES[$i]}_markers.json --graph ${NAMES[$i]}_markers_graph.pdf
+  echo_and_run biomarkers control-create --markers ${NAMES[$i]}_markers.json --control ${NAMES[$i]}_control.json
+  echo_and_run biomarkers control-export --control ${NAMES[$i]}_control.json --export ${NAMES[$i]}_control.tex --drop markers_names,red_states --green-only
+  echo_and_run biomarkers markers-factorize --markers ${NAMES[$i]}_markers.json
+done

@@ -1,5 +1,0 @@
-#!/bin/bash
-
-
-echo creating selvaggio_m1 markers of size 4
-biomarkers problem-solve --problem selvaggio_m1_problem.json --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --markers selvaggio_m1_markers_size4.json --marker-size-min 4 --marker-size-max 4
