@@ -4,5 +4,7 @@
 *.blg
 *.json
 *.asp
-*.json
 *.csv
+selvaggio
+*junk*
+*tmp*

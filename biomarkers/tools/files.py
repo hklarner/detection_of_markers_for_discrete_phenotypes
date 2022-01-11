@@ -3,7 +3,7 @@
 import json
 import logging
 import sys
-from typing import List
+from typing import List, Optional
 
 import click
 import pandas as pd
@@ -13,10 +13,14 @@ COLORS = {int: "white", str: "green", None: "gray", "key": "blue"}
 log = logging.getLogger(__name__)
 
 
-def export_df(df: pd.DataFrame, fname: str) -> str:
+def export_df(df: pd.DataFrame, fname: str) -> Optional[str]:
     if "." not in fname:
         log.error(f"unspecified extension, cannot export data frame: fname={fname}")
         sys.exit(1)
+
+    if df.empty:
+        log.error(f"data frame is empty, cannot export data frame: fname={fname}")
+        return
 
     ext = fname.split(".")[1]
 

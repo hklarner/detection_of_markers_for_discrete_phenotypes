@@ -1,4 +1,5 @@
 
+
 ## About
 This repo contains the unformatted tex document for the publication "Detection of Markers for Discrete Phenotypes".
 The paper was published and is available at
@@ -13,6 +14,8 @@ If you have questions, want to discuss ideas or report errors and typos in the m
 
  * hannes.klarner@fu-berlin.de (developer)
  * heike.siebert@fu-berlin.de
+
+The repo also contains a Python CLI tool, called `biomarkers`, that can be used to compute the markers for a given Boolean network and phenotype components.
 
 
 ## Installation
@@ -30,20 +33,60 @@ pip3 install pip --upgrade
 pip3 install git+https://github.com/hklarner/detection_of_markers_for_discrete_phenotypes@1.0.0
 ```
 
-## Command line interface
-For help on the available commands call `biomarkers -h`.
+If the installation was successful you should be able to see the help menu for the biomarkers tool:
 
-### problem-create
-To create a marker detection problem use the command `problem-create`:
 ```
-biomarkers problem-create --forbidden AJ_b1,AJ_b2,FA_b1,FA_b2,FA_b3 --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0,FA_b1=1,FA_b2=0,FA_b3=0 marker-size-max 3
+$ biomarkers -h
+Usage: biomarkers [OPTIONS] COMMAND1 [ARGS]... [COMMAND2 [ARGS]...]...
+
+Options:
+  -v, --version  Display version.
+  -h, --help     Show this message and exit.
+
+Commands:
+  control-create             Create a control file.
+  control-export             Export a control file.
+  json-info                  Reads json file and prints summary.
+  markers-export             Exports markers as CSV.
+  markers-factorize          Factorizes a marker set.
+  markers-graph              Creates a marker graph.
+  markers-info               Prints info about a markers file.
+  markers-validate           Validates a marker set.
+  problem-create             Creates a marker detection problem.
+  problem-info               Displays info about a problem file.
+  problem-solve              Solves a marker detection problem.
+  repo                       Access to the pyboolnet repository.
+  steady-states-correlation  Creates the steady state correlation graph.
+  steady-states-matrix       Prints the steady state matrix.
 ```
 
-### problem-solve
+
+## Computation of markers
+The computation of the markers is a two-step process.
+First, define a problem file by specifying a Boolean network and the phenotypes components or phenotype subspace using the command `problem-create`:
+```
+biomarkers problem-create --problem emt_problem.json --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0
+```
+
+The command creates a problem file in `json` format.
+See `biomarkers problem-create -h` for a description of the available options.
+
 To compute the markers for a problem file use the command `problem-solve`:
 ```
-biomarkers problem-solve
+biomarkers problem-solve --problem emt_problem.json --forbidden AJ_b1,AJ_b2 --marker-size-max 5 --markers emt_markers.json
 ```
+The command creates a markers file in `json` format.
+See `biomarkers problem-solve -h` for a description of the available options.
+
+To factorize a marker set use the command `biomarkers markers-factorize` and specify the markers file:
+```
+biomarkers markers-factorize --markers emt_markers.json
+```
+To export a marker set in `csv` format use the command `biomarkers markers-export`:
+```
+biomarkers markers-factorize --markers emt_markers.json --csv emt_markers.csv
+```
+
 
 
 ## repo

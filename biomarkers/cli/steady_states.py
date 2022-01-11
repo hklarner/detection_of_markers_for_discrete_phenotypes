@@ -9,8 +9,9 @@ from biomarkers.tools.steady_states import echo_steady_state_matrix
 
 @click.command("steady-states-correlation")
 @click.option("-p", "--problem", "fname_problem", nargs=1, default="tmp_problem.json", show_default=True, help="File name of the problem json.")
-@click.option("-g", "--graph", "fname_graph", nargs=1, default="tmp_correlation_graph.pdf", show_default=True, help="File name of the correlation graph.")
-def steady_state_correlation(fname_problem: str, fname_graph: str):
+@click.option("-g", "--graph", "fname_graph", nargs=1, default="tmp_steady_state_correlation_graph.pdf", show_default=True, help="File name of the correlation graph.")
+@click.option("--tex", "fname_tex", nargs=1, default="tmp_steady_state_correlation_table.tex", show_default=True, help="File name of the correlation table.")
+def steady_state_correlation(fname_problem: str, fname_graph: str, fname_tex: str):
     """
     Creates the steady state correlation graph.
 
@@ -18,7 +19,7 @@ def steady_state_correlation(fname_problem: str, fname_graph: str):
     """
 
     problem = try_to_load_problem_or_exit(fname=fname_problem)
-    create_steady_state_correlation_graph(problem=problem, fname=fname_graph)
+    create_steady_state_correlation_graph(problem=problem, fname_pdf=fname_graph, fname_tex=fname_tex)
 
 
 @click.command("steady-states-matrix")

@@ -3,6 +3,7 @@
 import logging
 from typing import Optional
 
+import pandas as pd
 from networkx import DiGraph
 from pyboolnet.interaction_graphs import igraph2image, primes2igraph
 
@@ -12,7 +13,7 @@ from biomarkers.steady_states.correlation import compute_correlated_components
 log = logging.getLogger(__name__)
 
 
-def create_steady_state_correlation_graph(problem: Problem, fname: Optional[str] = None) -> DiGraph:
+def create_steady_state_correlation_graph(problem: Problem, fname_pdf: Optional[str] = None, fname_tex: Optional[str] = None) -> DiGraph:
     igraph = primes2igraph(primes=problem.primes)
     correlated_components = [[problem.component_names[x] for x in block] for block in compute_correlated_components(steady_states=problem.steady_states)]
 
@@ -35,8 +36,15 @@ def create_steady_state_correlation_graph(problem: Problem, fname: Optional[str]
             if sub_graph.in_degree(n) == 0:
                 igraph.nodes[n]["penwidth"] = 5
 
-    if fname:
-        igraph2image(igraph=igraph, fname_image=fname, layout_engine="dot")
-        log.info(f"created {fname}")
+    if fname_pdf:
+        igraph2image(igraph=igraph, fname_image=fname_pdf, layout_engine="dot")
+        log.info(f"created {fname_pdf}")
+
+    if fname_tex:
+        tex = pd.DataFrame(data={"correlation blocks": [', '.join(x) for x in correlated_components]}).to_latex()
+        with open(fname_tex, "w") as fp:
+            fp.write(tex)
+
+        log.info(f"created {fname_tex}")
 
     return igraph
