@@ -5,6 +5,8 @@
 *.json
 *.asp
 *.csv
-selvaggio
+*selvaggio*
 *junk*
 *tmp*
+*cache*
+venv
