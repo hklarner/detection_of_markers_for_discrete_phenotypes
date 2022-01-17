@@ -3,10 +3,10 @@
 import click
 
 from biomarkers.graphs.marker_frequency import create_marker_frequency_graph
+from biomarkers.tools.factorization import factorize_marker_sets
 from biomarkers.tools.files import export_df
 from biomarkers.tools.marker_detection import try_to_load_problem_or_exit, try_to_load_markers_or_exit
 from biomarkers.tools.parsing import try_to_parse_comma_separated_values_or_exit
-from biomarkers.tools.set_factorization import factorize_marker_sets
 from biomarkers.tools.validation import validate_marker_set_and_print_result
 
 
@@ -73,6 +73,7 @@ def markers_validate(fname_problem: str, markers_text: str):
 def markers_factorize(fname_markers: str, fname_tex: str):
     """
     Factorizes a marker set.
+
 
     biomarkers markers-factorize -m markers.json
     """
