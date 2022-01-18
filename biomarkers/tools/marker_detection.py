@@ -5,7 +5,7 @@ import logging
 import sys
 from typing import List
 
-from pyboolnet.trap_spaces import steady_states as compute_steady_states
+from pyboolnet.trap_spaces import compute_steady_states
 
 from biomarkers.factories.problem import phenotype_indices_from_subspace, phenotype_indices_from_components
 from biomarkers.marker_detection.markers import Markers

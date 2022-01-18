@@ -74,8 +74,28 @@ def markers_factorize(fname_markers: str, fname_tex: str):
     """
     Factorizes a marker set.
 
+    A factorization is a non-unique representation of a set of markers as a product of marker subsets, see http://dl.acm.org/doi/10.1145/3486713.3486729 for details.
+    The command divides the marker sets into sets of identical cardinality and heuristically searches for a factorization with as many and as large as possible factors.
+    Two types of factors may occur:
 
-    biomarkers markers-factorize -m markers.json
+        * singleton factors, e.g. S(1,2) \n
+        * long factors, e.g. L(n=2,k=8)
+
+    A singleton factor S(1,2) indicates that every marker set contains either component 1 or component 2.
+    A long factor L(n=2,k=8) indicates that every marker set contains an additional pair of components (n=2) and that their are 8 pairs to choose from (k=8).
+    If k<=3 then the markers subsets are explicitely enumerated, e.g. {{25,14},{39,31}} means that every markers set contains either the pair {25,14} or the pair {39,31} of components.
+
+    The command prints a table of data with columns
+
+        * n_components: the number of components in each marker set \n
+        * n_markers: the number of marker sets \n
+        * factorization: the factorization of the set \n
+        * n_factorization: the number of factors used in the factorization \n
+        * n_factors: the numer of factors detected in the heuristic search
+
+    Example:
+
+    $ biomarkers markers-factorize -m markers.json
     """
 
     markers = try_to_load_markers_or_exit(fname=fname_markers)

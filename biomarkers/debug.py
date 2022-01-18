@@ -1,6 +1,6 @@
 
 from pyboolnet.repository import get_primes
-from pyboolnet.trap_spaces import steady_states as compute_steady_states
+from pyboolnet.trap_spaces import compute_steady_states
 
 from biomarkers.factories.markers import markers_from_problem
 from biomarkers.marker_detection.options import Options

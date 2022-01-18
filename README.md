@@ -33,8 +33,9 @@ pip3 install pip --upgrade
 pip3 install git+https://github.com/hklarner/detection_of_markers_for_discrete_phenotypes@1.0.0
 ```
 
-If the installation was successful you should be able to see the help menu for the biomarkers tool:
 
+## The biomarkers tool
+If the installation was successful you should be able to see the help menu for the biomarkers tool:
 ```
 $ biomarkers -h
 Usage: biomarkers [OPTIONS] COMMAND1 [ARGS]... [COMMAND2 [ARGS]...]...
@@ -59,6 +60,8 @@ Commands:
   steady-states-correlation  Creates the steady state correlation graph.
   steady-states-matrix       Prints the steady state matrix.
 ```
+To see the help text and available options of a command call the command with the option `-h`.
+E.g., to see the help text for the command `markers-create` call `biomarks markers-create -h`.
 
 
 ## Computation of markers
@@ -67,16 +70,13 @@ First, define a problem file by specifying a Boolean network and the phenotypes 
 ```
 biomarkers problem-create --problem emt_problem.json --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0
 ```
-
 The command creates a problem file in `json` format.
-See `biomarkers problem-create -h` for a description of the available options.
 
 To compute the markers for a problem file use the command `problem-solve`:
 ```
 biomarkers problem-solve --problem emt_problem.json --forbidden AJ_b1,AJ_b2 --marker-size-max 5 --markers emt_markers.json
 ```
 The command creates a markers file in `json` format.
-See `biomarkers problem-solve -h` for a description of the available options.
 
 To factorize a marker set use the command `biomarkers markers-factorize` and specify the markers file:
 ```
@@ -86,7 +86,6 @@ To export a marker set in `csv` format use the command `biomarkers markers-expor
 ```
 biomarkers markers-factorize --markers emt_markers.json --csv emt_markers.csv
 ```
-
 
 
 ## repo

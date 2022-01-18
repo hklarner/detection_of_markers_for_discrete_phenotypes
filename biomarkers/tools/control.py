@@ -8,7 +8,7 @@ from typing import List, Dict, Callable
 import click
 import pandas as pd
 from pyboolnet.prime_implicants import percolate, find_constants
-from pyboolnet.trap_spaces import steady_states as compute_steady_states
+from pyboolnet.trap_spaces import compute_steady_states
 
 from biomarkers.marker_detection.markers import Markers
 from biomarkers.pyboolnet_extensions import is_trap_space

@@ -35,7 +35,7 @@ def try_to_parse_comma_separated_items_or_exit(text: str) -> Optional[dict]:
     try:
         return parse_comma_separated_items(text=text, value_map=int)
     except ValueError as error:
-        log.error(f"cannot parse subspace: text={text}, error={error}")
+        log.error(f"cannot parse items: text={text}, error={error}")
         sys.exit()
 
 
