@@ -25,7 +25,7 @@ def steady_state_correlation(fname_problem: str, fname_graph: str, fname_tex: st
 @click.command("steady-states-matrix")
 @click.option("-p", "--problem", "fname_problem", nargs=1, default="problem.json", show_default=True, help="File name of the problem json.")
 @click.option("-m", "--markers", "markers_text", nargs=1, help="Adds marker type to matrix, comma separated names.")
-def steady_states_matrix(fname_problem: str, markers_text: str, correlation: bool):
+def steady_states_matrix(fname_problem: str, markers_text: str):
     """
     Prints the steady state matrix.
 

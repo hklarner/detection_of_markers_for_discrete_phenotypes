@@ -49,7 +49,7 @@ def control_create(fname_markers: str, fname_control: str, limit: int):
     df = try_to_run_control_or_exit(markers=markers, limit=limit)
     time_end = time()
 
-    print(f"cpu time: {timedelta(seconds=time_end - time_start)}")
+    print(f"cpu time: {timedelta(seconds=round(time_end - time_start))}")
 
     df.to_csv(fname_control, index=False)
     print(f"created {fname_control}")

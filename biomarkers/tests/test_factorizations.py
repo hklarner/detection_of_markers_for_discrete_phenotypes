@@ -1,6 +1,6 @@
 
 
-from biomarkers.factorization.integer_sets import IntegerSets
+from biomarkers.tools.integer_sets import IntegerSets
 
 
 def test_is_factor():

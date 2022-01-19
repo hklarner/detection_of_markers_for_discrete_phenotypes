@@ -39,7 +39,7 @@ def problem_solve(fname_problem: str, fname_markers: str, enable_one_to_one: boo
     markers = markers_from_problem(problem=problem, options=options, dry=dry)
     time_end = time()
 
-    print(f"cpu time: {timedelta(seconds=time_end - time_start)}")
+    print(f"cpu time: {timedelta(seconds=round(time_end - time_start))}")
     markers.info()
 
     if fname_markers:
@@ -101,6 +101,6 @@ if __name__ == "__main__":
     time_end = time()
 
     print(f"first three marker sets: {markers.indices[:3]}")
-    print(f"cpu time: {timedelta(seconds=time_end - time_start)}")
+    print(f"cpu time: {timedelta(seconds=round(time_end - time_start))}")
     print(f"len(markers)={len(markers.indices)}")
 

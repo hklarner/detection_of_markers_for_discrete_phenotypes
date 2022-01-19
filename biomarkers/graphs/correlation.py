@@ -18,7 +18,7 @@ def create_steady_state_correlation_graph(problem: Problem, fname_pdf: Optional[
     correlated_components = [[problem.component_names[x] for x in block] for block in compute_correlated_components(steady_states=problem.steady_states)]
 
     if len(correlated_components) > 19:
-        log.warning(f"number of blocks of correlated exceeds maximum number of color, colors will repeat: {len(correlated_components)=}, n_colors=19")
+        log.warning(f"number of blocks exceeds maximum number of colors, colors will repeat: n_blocks={len(correlated_components)}, n_colors=19")
 
     igraph.graph["edge"]["color"] = "gray"
 

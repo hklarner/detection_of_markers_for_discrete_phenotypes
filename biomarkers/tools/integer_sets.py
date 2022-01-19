@@ -1,3 +1,5 @@
+
+
 from itertools import product
 from typing import Set, Iterable, Tuple
 
@@ -39,6 +41,10 @@ class IntegerSets:
     @property
     def is_singleton(self) -> bool:
         return all(len(x) == 1 for x in self._sets)
+
+    @property
+    def flat_set(self) -> Set[int]:
+        return set.union(*self._sets)
 
     def is_a_factor_of(self, other: "IntegerSets") -> bool:
         return all(sum(x.issubset(y) for x in self) == 1 for y in other)

@@ -37,7 +37,7 @@ def print_phenotype_table(problem: Problem):
     data = defaultdict(list)
     for phenotype_index, count in sorted(counts.items()):
         data["phenotype_index"].append(phenotype_index)
-        data["phenotype_text"].append(problem.get_phenotype_text(phenotype_index=phenotype_index))
+        data["phenotype"].append(problem.get_phenotype_text(phenotype_index=phenotype_index))
         data["n_steady_states"].append(count)
 
     print(pd.DataFrame(data=data))

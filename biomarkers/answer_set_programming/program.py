@@ -48,7 +48,7 @@ class Program:
         self.control.ground(parts=[("base", [])])
         self.control.solve(on_model=on_model)
 
-        print(f"clingo {' '.join(self.options)}")
+        print(f"$ clingo {' '.join(self.options)}")
 
         return indices
 
@@ -60,7 +60,7 @@ class Program:
             options = ["clingo", "--models=0", f"--time-limit={time_limit_seconds}", "--opt-mode=optN", "--enum-mode=domRec", "--heuristic=Domain", "--dom-mod=5,16"]
         result = subprocess.run(options, input=self.to_str(), capture_output=True, text=True)
         print(result.stdout)
-        print(f"clingo {' '.join(options)}")
+        print(f"$ clingo {' '.join(options)}")
 
     def to_asp(self, fname: str) -> str:
         text = self.to_str()

@@ -8,15 +8,17 @@ from typing import List, Dict
 import networkx as nx
 import pandas as pd
 
-from biomarkers.factorization.integer_sets import IntegerSets
 from biomarkers.marker_detection.markers import Markers
+from biomarkers.tools.files import export_df
+from biomarkers.tools.integer_sets import IntegerSets
 
 log = logging.getLogger(__name__)
 
 
-def factorize_marker_sets(markers: Markers) -> pd.DataFrame:
+def factorize_marker_sets(markers: Markers, fname_tex: str, print_results: bool = True) -> Dict[int, List[IntegerSets]]:
     integer_sets_by_size = integer_sets_by_size_from_markers(markers=markers)
     factors_by_size = compute_factors_by_size(integer_sets_by_size=integer_sets_by_size)
+    optimal_factors_by_size = {}
 
     data = defaultdict(list)
     for size, factors in factors_by_size.items():
@@ -37,17 +39,24 @@ def factorize_marker_sets(markers: Markers) -> pd.DataFrame:
 
             if optimal_factors:
                 data["factorization"].append(" * ".join(map(str, optimal_factors)))
-                data["n_factorization"].append(len(optimal_factors))
-                data["n_factors"].append(len(available_factors))
+                data["n_factors_used"].append(len(optimal_factors))
+                data["n_factors_available"].append(len(available_factors))
+                optimal_factors_by_size[size] = optimal_factors
                 continue
 
         data["factorization"].append("-")
-        data["n_factorization"].append("-")
-        data["n_factors"].append("-")
+        data["n_factors_used"].append("-")
+        data["n_factors_available"].append("-")
 
     df = pd.DataFrame(data=data).convert_dtypes()
 
-    return df
+    if print_results:
+        print(df.to_string(index=False))
+
+    if fname_tex:
+        export_df(df=df, fname=fname_tex)
+
+    return optimal_factors_by_size
 
 
 def compute_optimal_factors_for_factorization(sets: IntegerSets, factors: List[IntegerSets]) -> List[IntegerSets]:
