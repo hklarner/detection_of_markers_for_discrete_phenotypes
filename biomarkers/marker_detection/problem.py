@@ -21,9 +21,31 @@ class Problem(BaseModel, ToJsonMixin):
 
     def info(self):
         print(f"n_steady_states: {len(self.steady_states)}")
-        print(f"component_names: [{','.join(self.component_names)}]")
-        print(f"phenotype_components: {self.phenotype_components}")
-        print(f"phenotype_subspace: {self.phenotype_subspace}")
+        if self.component_names:
+            components = sorted(self.phenotype_components if self.phenotype_components else self.phenotype_subspace)
+            mapping = {i: self.component_names[i] for i in components}
+            print(f"component_names: {mapping}")
+
+        if self.phenotype_components:
+            print(f"phenotype_components: {self.phenotype_components}")
+        else:
+            print(f"phenotype_subspace: {self.phenotype_subspace}")
+
+    def get_phenotype_text(self, phenotype_index: int) -> str:
+        for i, state in enumerate(self.steady_states):
+            if self.phenotype_indices[i] == phenotype_index:
+                if self.phenotype_components:
+                    phenotype = {x: state[x] for x in self.phenotype_components}
+                    text = f"{phenotype}"
+                elif phenotype_index == 1:
+                    phenotype = self.phenotype_subspace
+                    text = f"{phenotype}"
+                else:
+                    phenotype = self.phenotype_subspace
+                    text = f"not {phenotype}"
+                return text
+
+        raise ValueError(f"unknown phenotype index: {phenotype_index=}")
 
     @validator("steady_states")
     def is_binary_vector(cls, v):
@@ -32,3 +54,14 @@ class Problem(BaseModel, ToJsonMixin):
         return v
 
 
+if __name__ == '__main__':
+    import pandas as pd
+
+    phenotype = {0: 0, 1: 0}
+    text = ''.join(x + '\u0336' for x in str(phenotype))
+    text = '\u0336'.join(str(phenotype))
+
+
+    data = {"phenotype": [f"{phenotype}", text]}
+    print(pd.DataFrame(data=data))
+    print("bye")

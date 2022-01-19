@@ -32,15 +32,15 @@ class Markers(BaseModel, ToJsonMixin):
 
     def info(self):
         if len(self.indices) > 3:
-            print(f"len(markers.indices)={len(self.indices)}")
-            print(f"markers.indices[:3]={self.indices[:3]}")
+            print(f"n_marker_sets={len(self.indices)}")
+            head = self.indices[:3]
+            print(f"first {len(head)} marker sets: {head}")
         else:
-            print(f"markers.indices={self.indices}")
+            print(f"marker_sets={self.indices}")
 
     def to_csv(self, fname: str) -> pd.DataFrame:
         df = self.to_df()
         df.to_csv(fname, index=False)
-
         log.info(f"created csv file: fname={fname}")
 
         return df

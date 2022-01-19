@@ -1,3 +1,7 @@
+
+
+from collections import defaultdict
+
 import click
 import pandas as pd
 
@@ -21,10 +25,20 @@ def echo_steady_state_matrix(problem: Problem):
 
     click.echo(" ", nl=False)
     for _ in range(int(n/10)):
-        click.echo("         ^", nl=False)
+        click.echo("─────────┴", nl=False)
     click.echo()
 
 
 def print_phenotype_table(problem: Problem):
-    print(pd.DataFrame(data={"phenotype_index": problem.phenotype_indices}).value_counts(sort=False).to_frame(name="count"))
+    counts = defaultdict(int)
+    for phenotype_index in problem.phenotype_indices:
+        counts[phenotype_index] += 1
+
+    data = defaultdict(list)
+    for phenotype_index, count in sorted(counts.items()):
+        data["phenotype_index"].append(phenotype_index)
+        data["phenotype_text"].append(problem.get_phenotype_text(phenotype_index=phenotype_index))
+        data["n_steady_states"].append(count)
+
+    print(pd.DataFrame(data=data))
 

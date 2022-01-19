@@ -66,9 +66,13 @@ E.g., to see the help text for the command `markers-create` call `biomarks marke
 
 ## Computation of markers
 The computation of the markers is a two-step process.
-First, define a problem file by specifying a Boolean network and the phenotypes components or phenotype subspace using the command `problem-create`:
+First, define a problem file by specifying a Boolean network and the phenotype subspace using the command `problem-create`:.
 ```
 biomarkers problem-create --problem emt_problem.json --bnet selvaggio_emt --phenotype AJ_b1=0,AJ_b2=0
+```
+Instead of specifying a phenotype subspace you may specify the phenotype components:
+```
+biomarkers problem-create --problem emt_problem.json --bnet selvaggio_emt --phenotype AJ_b1,AJ_b2
 ```
 The command creates a problem file in `json` format.
 
@@ -77,15 +81,16 @@ To compute the markers for a problem file use the command `problem-solve`:
 biomarkers problem-solve --problem emt_problem.json --forbidden AJ_b1,AJ_b2 --marker-size-max 5 --markers emt_markers.json
 ```
 The command creates a markers file in `json` format.
+To export a marker set in `csv` format use the command `biomarkers markers-export`:
+```
+biomarkers markers-export --markers emt_markers.json --csv emt_markers.csv
+```
 
 To factorize a marker set use the command `biomarkers markers-factorize` and specify the markers file:
 ```
 biomarkers markers-factorize --markers emt_markers.json
 ```
-To export a marker set in `csv` format use the command `biomarkers markers-export`:
-```
-biomarkers markers-factorize --markers emt_markers.json --csv emt_markers.csv
-```
+
 
 
 ## repo
