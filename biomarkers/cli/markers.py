@@ -2,11 +2,11 @@
 
 import click
 
-from biomarkers.graphs.marker_count import create_marker_count_graph, get_component_counts_from_markers
-from biomarkers.graphs.marker_factorization import create_marker_factorization_graphs_by_size
 from biomarkers.tools.factorization import factorize_marker_sets
 from biomarkers.tools.files import export_df
+from biomarkers.tools.marker_count import create_marker_count_graph, get_component_counts_from_markers
 from biomarkers.tools.marker_detection import try_to_load_problem_or_exit, try_to_load_markers_or_exit
+from biomarkers.tools.marker_factorization import create_marker_factorization_graphs_by_size
 from biomarkers.tools.parsing import try_to_parse_comma_separated_values_or_exit
 from biomarkers.tools.validation import validate_marker_set_and_print_result
 

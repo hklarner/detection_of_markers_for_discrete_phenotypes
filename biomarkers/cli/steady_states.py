@@ -2,8 +2,8 @@
 
 import click
 
-from biomarkers.graphs.correlation import create_steady_state_correlation_graph
 from biomarkers.tools.marker_detection import try_to_load_problem_or_exit
+from biomarkers.tools.steady_state_correlation import create_steady_state_correlation_graph
 from biomarkers.tools.steady_states import echo_steady_state_matrix
 
 
