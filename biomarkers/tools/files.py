@@ -37,6 +37,8 @@ def export_df(df: pd.DataFrame, fname: str) -> Optional[str]:
     with open(fname, "w") as fp:
         fp.write(text)
 
+    log.info(f"created {fname}")
+
     return text
 
 

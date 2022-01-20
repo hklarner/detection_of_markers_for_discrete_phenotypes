@@ -2,26 +2,34 @@
 
 import click
 
+from biomarkers.graphs.marker_count import create_marker_count_graph, get_component_counts_from_markers
 from biomarkers.graphs.marker_factorization import create_marker_factorization_graphs_by_size
-from biomarkers.graphs.marker_frequency import create_marker_frequency_graph
 from biomarkers.tools.factorization import factorize_marker_sets
+from biomarkers.tools.files import export_df
 from biomarkers.tools.marker_detection import try_to_load_problem_or_exit, try_to_load_markers_or_exit
 from biomarkers.tools.parsing import try_to_parse_comma_separated_values_or_exit
 from biomarkers.tools.validation import validate_marker_set_and_print_result
 
 
-@click.command("markers-graph")
-@click.option("-m", "--markers", "fname_markers", nargs=1, default="tmp_markers.json", show_default=True, help="Name of markers file.")
-@click.option("-g", "--graph", "fname_graph", nargs=1, default="tmp_markers_graph.pdf", show_default=True, help="Name of markers graph file.")
-def markers_graph(fname_markers: str, fname_graph: str):
+@click.command("markers-count")
+@click.option("-m", "--markers", "fname_markers", nargs=1, default="tmp_markers.json", show_default=True, help="The name of the markers file.")
+@click.option("--pdf", "fname_pdf", nargs=1, default="tmp_markers_count.pdf", show_default=True, help="Creates a pdf of the interaction graph with marker counts.")
+@click.option("--tex", "fname_tex", nargs=1, default="tmp_markers_count.tex", show_default=True, help="Creates a tex of the markers count table.")
+def markers_count(fname_markers: str, fname_pdf: str, fname_tex: str):
     """
-    Creates a marker graph.
+    Counts how often components appear in the marker sets.
+    Prints a summary table.
 
-    biomarkers markers-graph -m markers.json -g markers_graph.pdf
+    biomarkers markers-count -m markers.json --pdf markers_count.pdf
     """
 
     markers = try_to_load_markers_or_exit(fname=fname_markers)
-    create_marker_frequency_graph(markers=markers, fname=fname_graph)
+    component_counts = get_component_counts_from_markers(markers=markers)
+    print(component_counts.to_string(index=False))
+    create_marker_count_graph(markers=markers, component_counts=component_counts, fname_pdf=fname_pdf)
+
+    if fname_tex:
+        export_df(df=component_counts, fname=fname_tex)
 
 
 @click.command("markers-info")

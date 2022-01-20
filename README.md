@@ -50,7 +50,7 @@ Commands:
   json-info                  Reads json file and prints summary.
   markers-export             Exports markers as CSV.
   markers-factorize          Factorizes a marker set.
-  markers-graph              Creates a marker graph.
+  markers-count              Creates a marker count graph.
   markers-info               Prints info about a markers file.
   markers-validate           Validates a marker set.
   problem-create             Creates a marker detection problem.
@@ -64,7 +64,7 @@ To see the help text and available options of a command call the command with th
 E.g., to see the help text for the command `markers-create` call `biomarks markers-create -h`.
 
 
-## Computation of markers
+## Use case 1: Marker detection
 The computation of the markers is a two-step process.
 First, define a problem file by specifying a Boolean network and the phenotype subspace using the command `problem-create`:.
 ```
@@ -110,7 +110,8 @@ To export a marker set in `csv` format use the command `biomarkers markers-expor
 $ biomarkers markers-export --markers emt_markers.json --csv emt_markers.csv
 ```
 
-To factorize a marker set use the command `biomarkers markers-factorize` and specify the markers file:
+To factorize a marker set use the command `biomarkers markers-factorize` and specify the markers file.
+The option `--pdf` creates, for each row in the table, a plot of the interaction graph with the marker subsets that make up the factorization highlighted:
 ```
 
 $ biomarkers markers-factorize --markers emt_markers.json --pdf emt_markers_factorization
@@ -123,7 +124,7 @@ created emt_markers_factorization_n2.pdf
 created emt_markers_factorization_n3.pdf
 created emt_markers_factorization_n4.pdf
 ```
-The option `--pdf` creates, for each row in the table, a plot of the interaction graph with the marker subsets that make up the factorization highlighted.
+
 
 
 ## Developers

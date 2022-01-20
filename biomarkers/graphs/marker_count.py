@@ -2,7 +2,7 @@
 
 import sys
 from collections import defaultdict
-from typing import Dict, Optional
+from typing import Optional
 
 import pandas as pd
 from networkx import DiGraph
@@ -13,48 +13,47 @@ from biomarkers.marker_detection.markers import Markers
 from biomarkers.pyboolnet_extensions import add_style_cascades
 
 
-def create_marker_frequency_graph(markers: Markers, fname: Optional[str] = None) -> DiGraph:
-    frequencies = component_frequencies_from_markers(markers=markers)
-    total = len(markers.indices)
-
+def create_marker_count_graph(markers: Markers, component_counts: pd.DataFrame, fname_pdf: Optional[str] = None) -> DiGraph:
     igraph = primes2igraph(primes=markers.problem.primes)
     igraph.graph["edge"]["color"] = "gray"
-    igraph.graph["label"] = f"len(marker_sets)={total}"
+    igraph.graph["label"] = f"n_marker_sets={len(markers.indices)}\nk: count\np: likelihood"
     igraph.graph["fontsize"] = 40
     add_style_cascades(igraph=igraph)
 
-    data = defaultdict(list)
-
-    for node, frequency in frequencies.items():
-        perc = frequency / total
-        node_name = markers.problem.component_names[node]
-        igraph.nodes[node_name]["fillcolor"] = f"0.1 {perc+0.2:.1f} 1.0"
-        igraph.nodes[node_name]["label"] = f"{node_name}\nk={frequency}\np={perc:.1f}"
-
-        data["name"].append(node_name)
-        data["count"].append(frequency)
-        data["likelihood"].append(perc)
+    for i, row in component_counts.iterrows():
+        igraph.nodes[row["name"]]["fillcolor"] = f"0.1 {row['likelihood']+0.2:.1f} 1.0"
+        igraph.nodes[row["name"]]["label"] = f"{row['name']}\nk={row['count']}\np={row['likelihood']:.1f}"
 
     if markers.problem.phenotype_components:
         for node in markers.problem.phenotype_components:
             node_name = markers.problem.component_names[node]
             igraph.nodes[node_name]["fillcolor"] = "0.6 0.5 1.0"
 
-    if fname:
-        igraph2image(igraph=igraph, fname_image=fname, layout_engine="dot")
-
-    print(pd.DataFrame(data=data))
+    if fname_pdf:
+        igraph2image(igraph=igraph, fname_image=fname_pdf, layout_engine="dot")
+        print(f"created {fname_pdf}")
 
     return igraph
 
 
-def component_frequencies_from_markers(markers: Markers) -> Dict[int, int]:
-    frequencies = defaultdict(int)
+def get_component_counts_from_markers(markers: Markers) -> pd.DataFrame:
+    counts = defaultdict(int)
     for indices in markers.indices:
         for x in indices:
-            frequencies[x] += 1
+            counts[x] += 1
 
-    return dict(frequencies)
+    total = len(markers.indices)
+    data = defaultdict(list)
+    for x, count in sorted(counts.items()):
+        node_name = markers.problem.component_names[x]
+        data["index"].append(x)
+        data["name"].append(node_name)
+        data["count"].append(count)
+        data["likelihood"].append(count / total)
+
+    df = pd.DataFrame(data=data)
+
+    return df
 
 
 if __name__ == "__main__":
@@ -68,6 +67,6 @@ if __name__ == "__main__":
     primes = get_primes(name="selvaggio_emt")
     markers = try_to_load_markers_or_exit(fname="../../markers.json")
     assert_consistency_of_component_names_or_exit(primes=primes, markers=markers)
-    create_marker_frequency_graph(primes=primes, markers=markers, fname="../../marker_frequency_graph.pdf")
+    create_marker_count_graph(primes=primes, markers=markers, fname_pdf="../../marker_frequency_graph.pdf")
 
     sys.exit()
