@@ -57,14 +57,15 @@ Commands:
   problem-info               Displays info about a problem file.
   problem-solve              Solves a marker detection problem.
   repo                       Access to the pyboolnet repository.
-  steady-states-correlation  Creates the steady state correlation graph.
-  steady-states-matrix       Prints the steady state matrix.
+  steady-state-correlation   Computes the blocks of the steady state correlation.
+  steady-state-matrix        Prints the steady state matrix.
 ```
 To see the help text and available options of a command call the command with the option `-h`.
 E.g., to see the help text for the command `markers-create` call `biomarks markers-create -h`.
 
 
 ## Use case 1: Marker detection
+
 The computation of the markers is a two-step process.
 First, define a problem file by specifying a Boolean network and the phenotype subspace using the command `problem-create`:.
 ```
@@ -92,6 +93,7 @@ phenotype_components: [0, 1]
 1                1   {0: 1, 1: 1}              148
 2                2   {0: 1, 1: 0}               36
 ```
+
 The command creates a problem file in `json` format.
 To compute the markers for a problem file use the command `problem-solve`:
 ```
@@ -104,16 +106,32 @@ n_marker_sets=116
 first 3 marker sets: [[4, 54], [4, 53], [4, 44]]
 created json file: fname=emt_markers.json
 ```
+
 The command creates a markers file in `json` format.
 To export a marker set in `csv` format use the command `biomarkers markers-export`:
 ```
 $ biomarkers markers-export --markers emt_markers.json --csv emt_markers.csv
+
+ index        name  count  likelihood
+     2         AKT      8        0.07
+     4     BCat_AJ      4        0.03
+     9         ECM      8        0.07
+    10        ECad     29        0.25
+ ...
+created emt_markers_counts.pdf
+created emt_markers_counts.tex
+```
+
+
+The command `markers-count` counts how often network components appear as markers.
+The option `--pdf` maps the counts onto an interaction graph and `--tex` export the data as a tex table.
+```
+$ biomarkers markers-count -m emt_markers.json --pdf emt_markers_counts.pdf --tex emt_markers_counts.tex
 ```
 
 To factorize a marker set use the command `biomarkers markers-factorize` and specify the markers file.
 The option `--pdf` creates, for each row in the table, a plot of the interaction graph with the marker subsets that make up the factorization highlighted:
 ```
-
 $ biomarkers markers-factorize --markers emt_markers.json --pdf emt_markers_factorization
 
  n_components  n_markers                                          factorization  n_factors_used  n_factors_available

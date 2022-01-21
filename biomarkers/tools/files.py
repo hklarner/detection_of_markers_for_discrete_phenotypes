@@ -13,7 +13,7 @@ COLORS = {int: "white", str: "green", None: "gray", "key": "blue"}
 log = logging.getLogger(__name__)
 
 
-def export_df(df: pd.DataFrame, fname: str) -> Optional[str]:
+def export_df(df: pd.DataFrame, fname: str, drop_columns: Optional[List[str]] = None) -> Optional[str]:
     if "." not in fname:
         log.error(f"unspecified extension, cannot export data frame: fname={fname}")
         sys.exit(1)
@@ -22,17 +22,21 @@ def export_df(df: pd.DataFrame, fname: str) -> Optional[str]:
         log.error(f"data frame is empty, cannot export data frame: fname={fname}")
         return
 
+    if drop_columns:
+        df = df.drop(columns=drop_columns)
+
     ext = fname.split(".")[1]
 
-    if ext == "tex":
-        text = df.to_latex(index=False)
-    elif ext == "csv":
-        text = df.to_csv(index=False)
-    elif ext == "md":
-        text = df.to_markdown(index=False)
-    else:
-        log.error(f"unknown extension, cannot export data frame: fname={fname}")
-        sys.exit(1)
+    with pd.option_context("display.max_colwidth", 1000):
+        if ext == "tex":
+            text = df.to_latex(index=False)
+        elif ext == "csv":
+            text = df.to_csv(index=False)
+        elif ext == "md":
+            text = df.to_markdown(index=False)
+        else:
+            log.error(f"unknown extension, cannot export data frame: fname={fname}")
+            sys.exit(1)
 
     with open(fname, "w") as fp:
         fp.write(text)

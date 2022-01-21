@@ -1,9 +1,11 @@
 
 
 from collections import defaultdict
+from typing import List
 
 import click
 import pandas as pd
+from pyboolnet.trap_spaces import compute_steady_states
 
 from biomarkers.marker_detection.problem import Problem
 
@@ -42,3 +44,7 @@ def print_phenotype_table(problem: Problem):
 
     print(pd.DataFrame(data=data))
 
+
+def compute_steady_state_array(primes: dict, max_steady_states: int) -> List[List[int]]:
+    names = sorted(primes)
+    return [[int(x[k]) for k in names] for x in compute_steady_states(primes=primes, max_output=max_steady_states)]

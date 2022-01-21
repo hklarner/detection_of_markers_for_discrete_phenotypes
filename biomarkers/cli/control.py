@@ -24,12 +24,11 @@ def control_export(fname_control: str, fname_export: str, columns_text: str, gre
     biomarkers control-export -c control.json -e control.tex
     """
 
-    columns = try_to_parse_comma_separated_values_or_exit(text=columns_text)
+    drop_columns = try_to_parse_comma_separated_values_or_exit(text=columns_text)
     df = pd.read_csv(fname_control)
     df = df[df["red_states"] == 0] if green_only else df
-    df.drop(columns=columns, inplace=True)
 
-    export_df(df=df, fname=fname_export)
+    export_df(df=df, fname=fname_export, drop_columns=drop_columns)
 
 
 @click.command("control-create")

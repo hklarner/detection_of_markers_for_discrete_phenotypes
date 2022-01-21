@@ -10,14 +10,12 @@ import pandas as pd
 from networkx import DiGraph
 from pyboolnet.interaction_graphs import igraph2image, primes2igraph
 
-from biomarkers.marker_detection.problem import Problem
-
 log = logging.getLogger(__name__)
 
 
-def create_steady_state_correlation_graph(problem: Problem, fname_pdf: Optional[str] = None, fname_tex: Optional[str] = None) -> DiGraph:
-    igraph = primes2igraph(primes=problem.primes)
-    correlated_components = [[problem.component_names[x] for x in block] for block in compute_correlated_components(steady_states=problem.steady_states)]
+def create_steady_state_correlation_graph(primes: dict, component_names: List[str], steady_states: List[List[int]], fname_pdf: Optional[str] = None, fname_tex: Optional[str] = None) -> DiGraph:
+    igraph = primes2igraph(primes=primes)
+    correlated_components = [[component_names[x] for x in block] for block in compute_correlated_components(steady_states=steady_states)]
 
     if len(correlated_components) > 19:
         log.warning(f"number of blocks exceeds maximum number of colors, colors will repeat: n_blocks={len(correlated_components)}, n_colors=19")

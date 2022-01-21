@@ -54,7 +54,7 @@ def factorize_marker_sets(markers: Markers, fname_tex: str, print_results: bool 
         print(df.to_string(index=False))
 
     if fname_tex:
-        export_df(df=df, fname=fname_tex)
+        export_df(df=df, fname=fname_tex, drop_columns=["n_factors_used", "n_factors_available"])
 
     return optimal_factors_by_size
 
