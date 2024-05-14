@@ -51,3 +51,7 @@ main.add_command(steady_state_correlation)
 main.add_command(control_create)
 main.add_command(control_export)
 main.add_command(json_info)
+
+
+if __name__ == "__main__":
+    main()
