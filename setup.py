@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         "click>=8.0.1",
-        "pydantic>=1.8.2",
+        "pydantic>=2.7.1",
         "pandas>=1.1.0",
         "pytest>=6.0.1",
         "clingo>=5.5.0.post3",
