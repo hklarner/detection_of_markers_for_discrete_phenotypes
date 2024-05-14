@@ -14,6 +14,7 @@ setup(
         "pydantic>=2.7.1",
         "pandas>=1.1.0",
         "pytest>=6.0.1",
+        "jinja2==3.1.4",
         "clingo>=5.5.0.post3",
         "pyboolnet @ git+https://github.com/hklarner/pyboolnet"
     ],
