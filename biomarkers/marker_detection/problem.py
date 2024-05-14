@@ -14,10 +14,10 @@ class Problem(BaseModel, ToJsonMixin):
     steady_states: List[List[int]]
     phenotype_indices: List[int]
 
-    phenotype_components: Optional[List[int]]
-    phenotype_subspace: Optional[Dict[int, int]]
-    primes: Optional[dict]
-    component_names: Optional[List[str]]
+    phenotype_components: Optional[List[int]] = None
+    phenotype_subspace: Optional[Dict[int, int]] = None
+    primes: Optional[dict] = None
+    component_names: Optional[List[str]] = None
 
     def info(self):
         print(f"n_steady_states: {len(self.steady_states)}")
@@ -55,13 +55,6 @@ class Problem(BaseModel, ToJsonMixin):
 
 
 if __name__ == '__main__':
-    import pandas as pd
+    problem = Problem(steady_states=[], phenotype_indices=[])
+    print(problem)
 
-    phenotype = {0: 0, 1: 0}
-    text = ''.join(x + '\u0336' for x in str(phenotype))
-    text = '\u0336'.join(str(phenotype))
-
-
-    data = {"phenotype": [f"{phenotype}", text]}
-    print(pd.DataFrame(data=data))
-    print("bye")

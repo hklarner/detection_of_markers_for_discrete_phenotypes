@@ -63,8 +63,11 @@ def problem_create(fname_problem: str, bnet_name: str, phenotype_text: str, max_
     phenotype_subspace = try_to_parse_comma_separated_items_or_exit(text=phenotype_text) if "=" in phenotype_text else None
 
     problem = try_to_create_marker_detection_problem_or_exit(
-        primes=primes, phenotype_components=phenotype_components, phenotype_subspace=phenotype_subspace,
-        max_steady_states=max_steady_states)
+        primes=primes,
+        phenotype_components=phenotype_components,
+        phenotype_subspace=phenotype_subspace,
+        max_steady_states=max_steady_states,
+    )
 
     problem.to_json(fname=fname_problem)
     problem.info()
